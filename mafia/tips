@@ -1,0 +1,88 @@
+Even if you don't have any special powers, you still have a vote. Use it wisely.
+Millers believe they are Townies, but inspections on them come up mafia.
+Some Townies are reflective. Night actions targeting a Reflective Townie will affect the player who used them instead.
+Townie is the most common role. Don't be surprised if there are multiple Townies in a game.
+Not all Cops are sane. Nonsane cops get incorrect results.
+Some roles can tamper with the result of a Cop inspection. Don't always believe inspection results!
+If a player changes teams the same night a Cop inspects them, the Cop will only learn the new team.
+If there are two or more Cops in the game, one of them is probably not sane.
+When you're a Vigilante, be careful - if the number of town players is close to the number of mafia players, killing a town player might lose the game.
+If you have an action but don't want to use it, submit a 'none' action.
+Serial Killers often claim to be Vigilantes.
+As long as the town has a Vigilante alive, scum won't win.
+Mafia Godfathers are immune to night kills.
+Quack Doctors are told they are Doctors, but their protections don't work.
+If there are two or more Doctors in a game, one of them is probably a quack.
+Some roles have day variants, which use their actions during the day instead of at night.
+A lynch always ends the day, even if you have an unused day ability.
+Retired Cops aren't necessarily sane.
+A Retired Cop will become a Cop even when an insane, naive, or paranoid Cop dies.
+Mafia Godfathers show up as Townies to Role Cops, and Millers show up as Mafiosos.
+Role Cops are frequently mafia.
+A Role Cop only learns what the target thinks their role is, not their true role.
+X-Abilities can be used either during day or night. To save them for the day, submit a 'none' action at night.
+Amnesiacs have a 1 in 3 chance of getting a new role each morning.
+Some Amnesiacs can become a Mafioso or Serial Killer.
+Some players are Skulking. If a Skulking player is targeted by any night action, even a Doctor protection, they die.
+A Death Miller shows up as a Mafioso (mafia) on death.
+If a Tracker's target used an action that affected multiple people, the Tracker learns everyone affeccted.
+A Night Watchman or Tracker can even see involuntary actions, such as a Psychopath's.
+Watchers, Trackers, and Night Watchmen can't see Ghosts.
+Cops, Vigilantes, and mafia all usually carry guns. Suicide Bombers and Timebombers carry bombs. Mad Monks and Mafia Muggers carry knives.
+Many Forensics Experts are unreliable. If an unreliable Forensics Expert's autopsy fails, there is no message.
+Certain roles can destroy a dead player's body, making it impossible to resurrect or autopsy them.
+If you are a Census Taker, you should use your ability as soon as possible.
+The Mafia Turncoat is very dangerous to mafia members who claim their true roles.
+Your messages might not be secret - an Eavesdropper could be listening.
+Many roles revive the first time they are killed, including the Reviver, Angel, and Zombie. Which role they had isn't revealed until they truly die.
+Fallen Angels are told they are Angels, but their protections don't work. Their revive, however, does.
+If you are a Coward, save your hide ability until you really need it.
+Mystery Roles always have a night action, but they don't know what it does.
+Roles such as Personal Physician and Doctor Frankenstein have a specific player who they always affect with their night action.
+A Nurse will become a Doctor even when a Quack Doctor dies.
+Nurses can become Quack Doctors, too.
+If there is more than one Doctor or Cop, a Nurse or Retired Cop will transform when the first one dies.
+Games which have a Poison Doctor in them almost always have a Poisoner.
+Some roles such as Angel or Elite Bodyguard are extremely powerful. If one of them dies, the town's chances of winning go down dramatically.
+Some Vigilantes are unreliable - some or all of their kill attempts simply fail.
+Daykillers can be scum.
+The Unlynchable and Paladin can't be lynched - the only way to get rid of one is with a kill action.
+Once a Doublekiller fires, the two shots are independent. Even if one doesn't work, the other target still dies.
+Remember that a Mad Monk can't be roleblocked or redirected, but also can't be protected by a Doctor.
+Cop inspections on an Ascetic or Mad Monk give no result.
+Jackie Chan isn't really immune to all actions - a Mafia Hitman or Chainsaw Murderer might be able to take him out.
+The CPR doctor is more likely to kill than to cure.
+You can't roleblock a Roleblocker or redirect a Redirecter, but you can redirect a Roleblocker and roleblock a Redirecter.
+A Redirecter can redirect an action to the player who used it.
+A player roleblocked by the Roleblocker or abducted by the Alien will recieve a message saying they were roleblocked if they try to use an action.
+Most actions can't be used to target yourself.
+If a Bus Driver switches a Cop's inspection target, the Cop won't realize that his information is for the wrong target.
+A Cop who is targeted by a Redirecter or Randomizer will learn who was actually inspected.
+A Computer Hacker has an equal chance of blocking, copying, or redirecting the target's action.
+Actions targeting a Mirror have their normal effect on the Mirror.
+If you get Stalker, don't announce the results of your inspections - instead, quietly slay the guilty at night.
+Stalkers can't be insane or naive, but they can be paranoid.
+If you're the Combat Member, remember that protecting someone is more likely to help the town than killing someone.
+Kill players you're sure are scum. Protect players you're sure aren't scum.
+A Shellshocked Combat Medic's actions always fail, both protects and kills.
+Jacks of All Trades are always sane.
+Some Jacks of All Trades are confused. When they target someone with an ability, they always use the wrong one.
+The Changeling is as good as a Role Cop - just look at what role you got back after swapping with someone.
+Morphers show up as the role and team of the last player they morphed to all inspections, and even on death.
+A Mutant is equally likely to become any role, even very uncommon ones.
+When a Mutant mutates into a Cop, the odds are against them being sane.
+Unstable Mutants might change teams when they mutate.
+People brought back from the dead by a Shaman will usually be town... but only usually.
+If the High Priest fails to bring someone back from the dead on the first try, they can try again until it works.
+A player can only ever come back from the dead once, no matter how many Shamans or High Priests are in the game.
+Most roles that bring a player back from the dead return that player with the same role and team they had when they died.
+Granting someone an extra vote with the Motivator won't change the number of votes required to lynch.
+The presence of a Psychiatrist almost always means there is also a Serial Killer.
+The presence of a Missionary almost always means there is a Cult Leader around.
+A Deprogrammer is a much more powerful version of the Missionary.
+An Ability Thief can often guess the target's role by seeing what ability was stolen.
+An Ability Thief has to choose between stealing a new ability or using a previous ability each night.
+The Inventor might give a use of the inspect, protect, block, or kill abilities.
+A Mad Scientist doesn't change the target's team, but it might give a role which is usually only available to another team.
+An Exorcist resets a player to the role and team they had when they began the game - and also restores full uses of any limited-use abilities.
+

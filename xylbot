@@ -1,0 +1,664 @@
+#!/usr/bin/perl
+
+use lib "lib";
+use warnings;
+no warnings 'redefine';
+use strict;
+
+use Net::IRC;
+
+# Configuration
+
+our $loaded;
+
+our (%module_status, %module_loaded, @module_files);
+
+our (%commands, %commands_public, %commands_private, %command_help);
+our (%handlers);
+
+our ($server, $channel, $nick, $owner, $port, $password, $linedelay, $require_name, $logtofile, $pid_file);
+
+our ($cur_channel, $cur_connection, $cur_fromnick, $cur_forum);
+
+our (%joined_channels, %channel_users);
+
+our (@users);
+
+our $quitting;
+
+# This stuff is for the logfile date (not sure I need it all, but I do need some of it)
+
+our (@months, @nummonths, @weekDays, $logdate, $second, $minute, $hour, $dayOfMonth, $month, $year,  $yearOffset, $dayOfWeek, $dayOfYear, $daylightSavings);
+
+@months = qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
+@nummonths = qw(01 02 03 04 05 06 07 08 09 10 11 12);
+@weekDays = qw(Sun Mon Tue Wed Thu Fri Sat Sun);
+($second, $minute, $hour, $dayOfMonth, $month, $yearOffset, $dayOfWeek, $dayOfYear, $daylightSavings) = localtime();
+$year = 1900 + $yearOffset;
+
+
+
+sub bot_log {
+	$logdate = "$nummonths[$month]-$year";
+	if ($logtofile)
+	{
+		open FILE, ">>", "logs/$pid_file-$logdate.log";
+		print FILE scalar(localtime), "\t", @_;
+		close FILE;
+	}
+	else
+	{
+	print scalar(localtime), "\t", @_;
+	}
+}
+
+if (!defined $loaded || !$loaded)
+{
+	$pid_file= "xylbot";
+	$server = "irc.globalgamers.net";
+	$channel = "#xylbot";
+	$nick = "DazBot";
+	$owner = "Daz";
+	$password = "";
+	$port = 6668;
+	$linedelay = 1;
+
+	for my $arg (@ARGV)
+	{
+		if ($arg =~ /^([^=]+)=([^=]+)$/)
+		{
+			${$::{$1}} = $2;
+		}
+	}
+	
+	$loaded = 1;
+	
+	bot_log "$server $channel $nick $owner\n";
+}
+else
+{
+	bot_log "Reloaded.\n";
+	return;
+}
+
+# Save PID
+if ($pid_file) {
+	open FILE, ">", "pid.$pid_file";
+	print FILE $$;
+	close FILE;
+}
+
+# Code
+
+autoflush STDOUT;
+
+our $irc = new Net::IRC;
+
+our $connection;
+	
+sub create_connection {
+	$connection = $irc->newconn(
+		Nick => $nick,
+		Server => $server,
+		Port => $port,
+		Password => $password,
+		Pacing => $linedelay,
+		Username => 'dazbot',
+		Ircname => 'dazbot');
+	add_commands();
+	add_handlers();
+	return $connection;
+}
+
+sub on_connect {
+	my $self = shift;
+
+	bot_log "Joining $channel...\n";
+	$self->join($channel);
+	#$self->privmsg($channel, "Hello! I'm ${owner}'s useless bot.");
+}
+
+sub do_command {
+	my ($self, $command, $forum, $from, $to, $args) = @_;
+	
+	# Save current channel and connection
+	$cur_channel = ($forum eq 'public' ? $to : $channel);
+	$cur_connection = $self;
+	$cur_fromnick = (split /!/, $from)[0];
+	$cur_forum = $forum;
+	
+	$command = lc $command;
+	
+	my $userlevel = 0;
+	
+	foreach my $user (@users)
+	{
+		my ($mask, $masklevel) = @$user;
+		
+		$mask = quotemeta($mask);
+		$mask =~ s/\\\*/.*/g;
+		
+		if ($from =~ /^$mask$/)
+		{
+			$userlevel = $masklevel;
+			last;
+		}
+	}
+
+	eval {
+	
+	if ($forum eq 'public' && exists $commands_public{$command})
+	{
+		foreach my $item (@{$commands_public{$command}})
+		{
+			my ($handler, $level) = @$item;
+			next unless $userlevel >= $level;
+			my $result = &{$handler}($self, $command, $forum, $from, $to, $args, $userlevel);
+			return $result if $result;
+		}
+	}
+	if ($forum eq 'private' && exists $commands_private{$command})
+	{
+		foreach my $item (@{$commands_private{$command}})
+		{
+			my ($handler, $level) = @$item;
+			next unless $userlevel >= $level;
+			my $result = &{$handler}($self, $command, $forum, $from, $to, $args, $userlevel);
+			return $result if $result;
+		}
+	}
+	if (exists $commands{$command})
+	{
+		foreach my $item (@{$commands{$command}})
+		{
+			my ($handler, $level) = @$item;
+			next unless $userlevel >= $level;
+			my $result = &{$handler}($self, $command, $forum, $from, $to, $args, $userlevel);
+			return $result if $result;
+		}
+	}
+	if ($forum eq 'public' && exists $commands_public{"*default*"})
+	{
+		foreach my $item (@{$commands_public{"*default*"}})
+		{
+			my ($handler, $level) = @$item;
+			next unless $userlevel >= $level;
+			my $result = &{$handler}($self, $command, $forum, $from, $to, $args, $userlevel);
+			return $result if $result;
+		}
+	}
+	if ($forum eq 'private' && exists $commands_private{"*default*"})
+	{
+		foreach my $item (@{$commands_private{"*default*"}})
+		{
+			my ($handler, $level) = @$item;
+			next unless $userlevel >= $level;
+			my $result = &{$handler}($self, $command, $forum, $from, $to, $args, $userlevel);
+			return $result if $result;
+		}
+	}
+	if (exists $commands{"*default*"})
+	{
+		foreach my $item (@{$commands{"*default*"}})
+		{
+			my ($handler, $level) = @$item;
+			next unless $userlevel >= $level;
+			my $result = &{$handler}($self, $command, $forum, $from, $to, $args, $userlevel);
+			return $result if $result;
+		}
+	}
+
+	}; # eval
+	if ($@)
+	{
+		bot_log "Trapped error: $@\n";
+		bot_log "Input was: <$from> $command $args\n";
+	}
+
+	return 0;
+}
+
+sub on_msg {
+	my ($self, $event) = @_;
+	
+	my $msg = ($event->args)[0];
+	my $from = $event->from;
+	my $to = ${$event->to}[0];
+	
+	my $public = ($to =~ /^#/);
+	
+       #bot_log "MSG from $from to $to: $msg\n";
+	
+	my $qnick = quotemeta lc $nick;
+	my $cmdspec = $require_name ? qr/!$qnick\s+/i : qr/!(?:$qnick\s+)?/i;
+	my $msgcmdspec = qr/!?(?:$qnick\s+)?/i;
+	
+	$msg = strip_codes($msg);
+	
+	if ($public ? $msg =~ /^\s*$cmdspec([\w]+)(?:\s+(.*)|\s*)$/ : $msg =~ /^\s*$msgcmdspec([\w]+)(?:\s+(.*)|\s*)$/)
+	{
+		my $command = $1;
+		my $args = $2 || "";
+		$args =~ s/\s+$//;
+		eval {
+			do_command($self, $command, $public ? "public" : "private", $from, $to, $args);
+		};
+		if ($@)
+		{
+			bot_log "Error while executing command $command: $@";
+		}
+	}
+}
+
+sub on_kick {
+	my ($self, $event) = @_;
+
+	my $channel = ($event->args)[0];
+	my $from = $event->from;
+	my $to = ${$event->to}[0];
+
+	if ($to eq $nick)
+	{
+		bot_log "KICKED from $channel by $from\n";
+		delete $joined_channels{$channel};
+	}
+}
+
+sub on_ping {
+	my ($self, $event) = @_;
+	my $nick = $event->nick;
+	
+	$self->ctcp_reply($nick, "PING " . join(' ', ($event->args)));
+}
+
+sub on_disconnect {
+
+#### This quits and restarts the bot immediately upon disconnect.
+## This was forced into play by several bugs that occured on disconnect/reconnect from IRC
+
+        $quitting = 1;
+        `./xylbot-globalgamers-silent &`;
+	exit(0);
+
+####
+	
+	my ($self, $event) = @_;
+	
+	return if $quitting;
+	my $sleeptime = 30;
+	my $sleeptime2 = 120;
+	
+	bot_log "Disconnected from ", $event->from(), " (", ($event->args())[0], "). Reconnect in $sleeptime seconds.\n";
+	sleep $sleeptime;
+
+	retry:
+	
+	bot_log "Attempting to reconnect...\n";
+	
+	create_connection();
+	unless ($connection->connect())
+	{
+		bot_log "Connect attempt failed. Retry in $sleeptime2 seconds.\n";
+		sleep $sleeptime2;
+		goto retry;
+	}
+}
+
+sub on_join {
+	my ($self, $event) = @_;
+	my $from = $event->from;
+	my $channel = ${$event->to}[0];
+	$from =~ /^(.*)!(.*)@(.*)$/;
+	my ($nick, $login, $host) = ($1, $2, $3);
+
+	$channel_users{$channel}{$nick} = [$nick, $login, $host];
+
+	if ($nick eq $::nick)
+	{
+		$self->who($channel);
+	}
+	else
+	{
+		if ($handlers{"join"})
+		{
+			$cur_connection = $self;
+			foreach my $handler (@{$handlers{"join"}})
+			{
+				&{$handler}($nick);
+			}
+		}
+	}
+}
+
+sub on_nick {
+	my ($self, $event) = @_;
+	my @args = $event->args;
+	my $from = $event->from;
+	my $channel = ${$event->to}[0];
+	$from =~ /^(.*)!(.*)@(.*)$/;
+	my ($nick, $login, $host) = ($1, $2, $3);
+	my $newnick = $args[0];
+
+	$channel_users{$channel}{$newnick} = [$newnick, $login, $host];
+	delete $channel_users{$channel}{$nick};
+
+	if ($handlers{"nick"})
+	{
+		$cur_connection = $self;
+		foreach my $handler (@{$handlers{"nick"}})
+		{
+			&{$handler}($nick, $newnick);
+		}
+	}
+}
+
+sub on_whoreply {
+	my ($self, $event) = @_;
+	my @args = $event->args;
+	my $channel = ${$event->to}[0];
+	my ($login, $host, $nick) = @args;
+
+	$channel_users{$channel}{$nick} = [$nick, $login, $host];
+}
+	
+
+sub add_handlers {
+	$connection->add_handler("yourhost", \&on_connect);
+	$connection->add_handler("msg", \&on_msg);
+	$connection->add_handler("public", \&on_msg);
+	$connection->add_handler("kick", \&on_kick);
+	$connection->add_handler("cping", \&on_ping);
+	$connection->add_handler("disconnect", \&on_disconnect);
+	$connection->add_handler("join", \&on_join);
+	$connection->add_handler("nick", \&on_nick);
+	foreach my $mod (keys %module_loaded)
+	{
+		if ($module_loaded{$mod} and exists &{"${mod}::add_handlers"})
+		{
+			eval "&${mod}::add_handlers";
+			if ($@)
+			{
+				bot_log "Error adding handlers for $mod: $@\n";
+			}
+		}
+	}
+}
+
+sub add_commands {
+	%commands = %commands_public = %commands_private = %command_help = ();
+
+	# Failsafe commands, overriden in the 'base' module.
+	&::add_command_any("quit", sub {
+		my ($self, $command, $forum, $from, $to, $args) = @_;
+		$self->quit($args ? $args : "Quitting");
+		$quitting = 1;
+		return 1;
+	}, 500);
+	&::add_command_any("upgrade", sub {
+		my ($self, $command, $forum, $from, $to, $args) = @_;
+		&do_reload();
+		::notice("Reloaded (failsafe).");
+		return 1;
+	}, 500);
+	
+	foreach my $mod (keys %module_loaded)
+	{
+		if ($module_loaded{$mod} and exists &{"${mod}::add_commands"})
+		{
+			eval "&${mod}::add_commands";
+			if ($@)
+			{
+				bot_log "Error adding commands for $mod: $@\n";
+			}
+		}
+	}
+}
+
+sub add_event_handler {
+	my ($event, $handler) = @_;
+
+	$handlers{$event} = [] unless $handlers{$event};
+	unshift @{$handlers{$event}}, $handler;
+}
+	
+sub add_command_public {
+	my ($command, $handler, $level, $help) = @_;
+
+	if ($level && $level !~ /^\d+$/)
+	{
+		$level = 0;
+		($command, $handler, $help) = @_;
+	}
+	$level = 0 unless $level;
+	
+	$commands_public{$command} = [] unless $commands_public{$command};
+	unshift @{$commands_public{$command}}, [$handler, $level];
+	
+	$command_help{$command} = $help if defined $help;
+}
+
+sub add_command_private {
+	my ($command, $handler, $level, $help) = @_;
+
+	if ($level && $level !~ /^\d+$/)
+	{
+		$level = 0;
+		($command, $handler, $help) = @_;
+	}
+	$level = 0 unless $level;
+		
+	$commands_private{$command} = [] unless $commands_private{$command};
+	unshift @{$commands_private{$command}}, [$handler, $level];
+	
+	$command_help{$command} = $help if defined $help;
+}
+
+sub add_command_any {
+	my ($command, $handler, $level, $help) = @_;
+
+	if ($level && $level !~ /^\d+$/)
+	{
+		$level = 0;
+		($command, $handler, $help) = @_;
+	}
+	$level = 0 unless $level;
+	
+	$commands{$command} = [] unless $commands{$command};
+	unshift @{$commands{$command}}, [$handler, $level];
+	
+	$command_help{$command} = $help if defined $help;
+}
+
+sub add_help {
+	my ($command, $help) = @_;
+	
+	$command_help{$command} = $help;
+}
+
+sub load_module {
+	my ($mod, $quitonerror) = @_;
+	
+	if (!$module_loaded{$mod})
+	{
+		$module_status{$mod} = do "$mod/module.pm";
+		if ($@)
+		{
+			bot_log "Error loading module $mod: $@\n";
+			die if $quitonerror;
+		}
+		elsif ($module_status{$mod})
+		{
+			bot_log "Module $mod loaded successfully\n";
+			$module_loaded{$mod} = 1;
+			push @module_files, "$mod/module.pm";
+			if (exists $::{"${mod}::"}{"files"})
+			{
+				foreach my $file (@{$::{"${mod}::"}{"files"}})
+				{
+					do "$mod/$file";
+					if ($@)
+					{
+						bot_log "Error loading $mod/$file: $@\n";
+						die if $quitonerror;
+					}
+					push @module_files, "$mod/$file";
+				}
+			}
+		}
+		else
+		{
+			bot_log "Module $mod failed to load\n";
+			die if $quitonerror;
+		}
+
+		if ($module_loaded{$mod} and exists &{"${mod}::postload"})
+		{
+			eval "&${mod}::postload";
+			if ($@)
+			{
+				bot_log "Error executing postload for $mod: $@\n";
+			}
+		}
+	}
+}
+
+sub load_modules {
+	open CONFIG, "<", "modules.conf";
+	while (<CONFIG>)
+	{
+		if (/^load\s*=\s*(.*)$/)
+		{
+			my @modules_to_load = split /\s+/, $1;
+			
+			foreach my $mod (@modules_to_load)
+			{
+				load_module($mod, 1);
+			}
+		}
+	}
+	close CONFIG;
+}
+
+sub read_users {
+	@users = ();
+	
+	open CONFIG, "<", "users";
+	while (my $line = <CONFIG>)
+	{
+		next if $line =~ /^\s*#/;
+		my ($mask, $level, $comment) = split /\s+/, $line, 3;
+		
+		push @users, [$mask, $level];
+	}
+	close CONFIG;
+}
+
+sub do_reload {
+	load_modules;
+	foreach my $file ($0, @module_files)
+	{
+		bot_log "Reloading from $file\n";
+		do $file;
+		if ($@)
+		{
+			bot_log "Error loading $file: $@\n";
+		}
+	}
+
+	foreach my $mod (keys %module_loaded)
+	{
+		if ($module_loaded{$mod} and exists &{"${mod}::postload"})
+		{
+			eval "&${mod}::postload";
+			if ($@)
+			{
+				bot_log "Error executing postload for $mod: $@\n";
+			}
+		}
+	}
+
+	add_commands;
+	add_handlers;
+	read_users;
+}
+
+# Send a message to the current channel
+sub say {
+	my ($to, $msg);
+	if (@_ > 1)
+	{
+		($to, $msg) = @_;
+	}
+	else
+	{
+		($to, $msg) = ($cur_channel, @_);
+	}
+	$cur_connection->privmsg($to, $msg);
+}
+
+# Do an action (/me) in the current channel
+sub action {
+	my ($to, $msg);
+	if (@_ > 1)
+	{
+		($to, $msg) = @_;
+	}
+	else
+	{
+		($to, $msg) = ($cur_channel, @_);
+	}
+	return unless $cur_connection;
+	$cur_connection->ctcp("ACTION", $to, $msg);
+}
+
+# If called with one argument, send a notice to the person who gave the command.
+# If called with two arguments, send a notice to a person given by the first argument.
+sub notice {
+	my ($to, $msg);
+	if (@_ > 1)
+	{
+		($to, $msg) = @_;
+	}
+	else
+	{
+		($to, $msg) = ($cur_fromnick, @_);
+	}
+	$to =~ s/!.*//;
+	
+	return unless $cur_connection;
+	$cur_connection->notice($to, $msg);
+}
+
+sub say_or_notice {
+	my $msg = shift;
+	
+	if ($cur_forum eq 'public')
+	{
+		say($msg);
+	}
+	else
+	{
+		notice($msg);
+	}
+}
+
+sub strip_codes {
+	my $text = shift;
+	
+	$text =~ s/\003\d+(?:,\d+)?|[\001-\037]//g;
+	
+	return $text;
+}
+
+load_modules;
+create_connection;
+read_users;
+
+bot_log "Connecting to server...\n";
+
+eval {
+$irc->start;
+};
+if ($@) {
+	bot_log "ERROR Looks like Net::IRC died: The error was '$@'\n";
+}

@@ -1,0 +1,69 @@
+games|__all_all|PLAYER needs to slow down, (s)he has played VALUE games.|PLAYER could also use a break after VALUE games.
+wins|__all_all|PLAYER is racking up the victories with VALUE wins, GAME% of his/her total games.|PLAYER is the runner up with VALUE, or GAME%.
+losses|__all_all|PLAYER doesn't know when to quit - (s)he's lost VALUE games (GAME%).|PLAYER is also persistent despite VALUE losses (GAME%).
+stats|kills|PLAYER is covered in blood after VALUE successful kills.|PLAYER is assistant butcher, with VALUE bodies in his/her wake.
+stats|killed|PLAYER is a kill magnet, (s)he was assassinated VALUE times - once for every RATIO games.|PLAYER also draws fire with VALUE homicides, 1 per RATIO games.
+stats|actmafiakill|PLAYER loves to pull the trigger, (s)he made the mafia kill VALUE times.|PLAYER is second in command with VALUE hits.
+stats|actkill|PLAYER shoots first and asks questions later, with VALUE non-mafia kills.|PLAYER is also a gunfighter with VALUE shots.
+stats|acthide|Don't ask PLAYER to stand and fight - (s)he hid VALUE times.|PLAYER also keeps an unliste number after VALUE hides.
+stats|actmystery|PLAYER doesn't shy from the unknown, using mystery abilities VALUE times.|PLAYER is nearly as brave, with VALUE mystery uses.
+stats|actfriend|PLAYER was very neighborly, befriending VALUE people.|PLAYER also let people know his/her alignment, VALUE times.
+stats|actframe|PLAYER keeps a stash of bloody gloves for framing people - VALUE attempts so far.|PLAYER also planted evidence VALUE times.
+stats|actmup|PLAYER likes to roll the dice, mupping on VALUE occasions.|PLAYER also took his/her chances, VALUE times.
+stats|actignite|PLAYER is a pyromaniac, setting VALUE fires.|Hide the matches from PLAYER too, (s)he used them VALUE times.
+stats|actsuicidebomb|PLAYER is a martyr for the jihad after suicide-bombing VALUE times.|PLAYER also sacrificed for the cause, on VALUE occasions.
+stats|actpardon|PLAYER is the Governor, pardoning VALUE people.|PLAYER is Lieutenant-Governor with VALUE pardons.
+stats|target1protect|Everyone likes PLAYER, (s)he was protected VALUE times.|PLAYER drew VALUE protections.
+stats|target1inspect|Nobody trusts PLAYER, (s)he was inspected VALUE times.|PLAYER is also quite suspicious, drawing VALUE inspections.
+stats|target1block|PLAYER can't get any peace, (s)he was roleblocked VALUE times.|PLAYER was also frequently disturbed by VALUE blocks.
+stats|target1mystery|PLAYER is everyone's favorite guinea pig, (s)he was targeted by mystery actions VALUE times.|PLAYER also advanced science, getting targeted VALUE times.
+stats|target1motivate|PLAYER tries harder after being motivated VALUE times.|PLAYER also voted early and often with VALUE motivations.
+stats|target1voteblock|Help, help, PLAYER is being repressed! (S)he was voteblocked VALUE times.|PLAYER also lacked representation after VALUE voteblocks.
+stats|target1poison|PLAYER wears a Mr. Yuck shirt after being poisoned VALUE times.|PLAYER also ingested toxic substances on VALUE occasions.
+stats|target1friend|PLAYER is Mr. Popular, getting befriended VALUE times.|PLAYER was also a trusted confidant with VALUE friendships.
+stats|target1convert|PLAYER should put away the scented candles, people tried to convert him/her VALUE times.|The missionaries also visited PLAYER on VALUE occasions.
+stats|target1mafiakill|The mafia are out to get PLAYER - they made VALUE attempts on his/her life.|They also tried to scrub PLAYER with VALUE hits.
+stats|target1kill|PLAYER is forming conspiracy theories after VALUE lone gunmen tried to whack him/her.|PLAYER is also dangerous to stand near, nonmafia killers targeted him/her VALUE times.
+stats|target1frame|PLAYER is like a painting... (s)he keeps getting framed, VALUE times so far.|The mob also tried to blame PLAYER, planting evidence VALUE times.
+stats|target1track|PLAYER is going places, and people want to know where - they tracked him/her VALUE times.|PLAYER also got tailed often, with VALUE trackings.
+stats|target1mup|People must like playing with PLAYER, they mupped him/her VALUE times.|PLAYER also suffered random actions, VALUE times.
+stats|target1abduct|PLAYER has billions of frequent flier miles after being abducted by aliens VALUE times.|PLAYER also had close encounters, VALUE of them.
+stats|target1proclaim|PLAYER has the trust of the populace, (s)he was made King VALUE times.|Also beloved was PLAYER, with VALUE turns under the crown.
+stats|target1psych|Many people think PLAYER has mental health problems, (s)he recieved psychological treatment VALUE times.|PLAYER keeps a dream diary after VALUE visits to the shrink.
+stats|aliveatend|PLAYER is slippery like a fish - (s)he survived to the end in VALUE games, or GAME% of the time.|PLAYER is also hard to kill, surviving VALUE times (GAME%).
+stats|deadatend|PLAYER can't get a break, ending up dead in VALUE games (GAME%).|PLAYER also has a favorite plot in the cemetary with VALUE deaths (GAME%).
+stats|wagonstarts|PLAYER leads the pack, starting VALUE bandwagons ending in lynch.|PLAYER is also eager, starting VALUE wagons.
+stats|hammers|Someone give PLAYER some nails, (s)he hammered VALUE times.|PLAYER is the apprentice carpenter with VALUE hammers.
+stats|bandwagons|PLAYER just wants to fit in, (s)he was on the lynch bandwagon VALUE times.|PLAYER came along for the ride, helping with VALUE lynches.
+stats|lynched|PLAYER just seems scummy, (s)he was lynched VALUE times (that's 1 in RATIO games).|PLAYER was almost as popular with VALUE lynches (once per RATIO games).
+stats|revives|PLAYER keeps going and going, (s)he revived on death VALUE times.|PLAYER was also durable with VALUE revives.
+stats|resurrected|PLAYER won't stay buried, (s)he came back from the dead VALUE times.|PLAYER also returned to life VALUE times.
+stats|changedteam|PLAYER can't decide how to win, (s)he changed sides VALUE times (once for each RATIO games).|PLAYER turned coat VALUE times.
+wins|__all_town|PLAYER must be a great scum-hunter, (s)he won with the town VALUE times.|PLAYER also caught bad guys with VALUE town wins.
+wins|__all_mafia|Beware of PLAYER, (s)he helped the mafia win VALUE times.|Don't turn your back on PLAYER either, (s)he got VALUE mafia wins.
+wins|__all_sk|PLAYER is a lone wolf - VALUE wins as serial killer.|PLAYER keeps a hockey mask for his/her VALUE serial killer wins.
+wins|__all_survivor|PLAYER survives against all odds, (s)he won VALUE times as survivor.|PLAYER is also unremarkable, with VALUE survivor wins.
+wins|__all_cult|PLAYER is easily persuaded, (s)he won with a cult VALUE times.|PLAYER was an altar boy with VALUE cult wins.
+losses|__all_town|PLAYER is an albatross, helping the town lose VALUE times.|PLAYER isn't very lucky either, losing with the good guys VALUE times.
+losses|__all_mafia|PLAYER can't shoot straight, bringing the mafia VALUE losses.|PLAYER needs a new line of work, (s)he's failed the mafia VALUE times.
+losses|__all_sk|PLAYER works best in groups, (s)he's failed VALUE times as a serial killer.|PLAYER should also hang up the chainsaw, with VALUE serial killer losses.
+losses|__all_survivor|PLAYER attracts too much attention, (s)he's lost VALUE games as a survivor.|PLAYER also stands out with VALUE survivor losses.
+losses|__all_cult|PLAYER keeps messing up the incantations - (s)he's gotten VALUE losses as part of a cult.|PLAYER shrinks when brainwashed with VALUE cult losses.
+wins|_league_all_all|PLAYER leads the #mafia league with VALUE wins.|The silver medal goes to PLAYER for VALUE victories.
+wins|_kingmaker_all_all|PLAYER is the King with VALUE kingmaker wins.|The Prince is PLAYER, with VALUE successes.
+wins|_raf_all_all|PLAYER is the best gunslinger in the land, with VALUE ready-aim-fire victories.|PLAYER wears the #2 headband after winning VALUE times.
+wins|_rps_all_all|PLAYER knows that nothing beats rock, with VALUE rock-paper-scissors victories.|PLAYER played scissors and got VALUE wins.
+wins|_lyncher_all_lyncher|PLAYER always gets his man, winning as lyncher VALUE times.|PLAYER is in second place with VALUE perfect lynches.
+wins|_momir_all_all|The master of many mutations, PLAYER, has won VALUE games of momir mafia.|The second smoothest shifter was PLAYER with VALUE wins.
+stats|rolechosenc|PLAYER likes to find the scum, (s)he chose Cop VALUE times in chosen.
+stats|rolechosencrole|PLAYER likes checking claims, (s)he chose Role Cop VALUE times in chosen.
+stats|rolechosend|PLAYER likes to help others, (s)he chose Doctor VALUE times in chosen.
+stats|rolechosenrb|PLAYER likes to be a nuisance, (s)he chose Roleblocker VALUE times in chosen.
+stats|rolechosentrk|PLAYER likes to see who's on the move, (s)he chose Tracker VALUE times in chosen.
+stats|rolechosenv|PLAYER likes to kill the scum, (s)he chose Vigilante VALUE times in chosen.
+stats|rolechosent|PLAYER likes to be ordinary, (s)he chose Townie VALUE times in chosen.
+stats|rolechosenpgo|PLAYER sleeps more comfortably a rocket launcher under his/her pillow, (s)he chose Paranoid Gun Owner VALUE times in chosen.
+stats|rolechosentik|PLAYER is happier with a bulletproof vest, (s)he chose Kill-Immune Townie VALUE times in chosen.
+stats|rolechosengf|PLAYER likes to be in charge, (s)he chose Godfather VALUE times in chosen.
+stats|rolechosenasc|PLAYER doesn't care for worldly things, (s)he chose Ascetic VALUE times in chosen.
+stats|rolechosenss|PLAYER likes to be avenged, (s)he chose Super-Saint VALUE times in chosen
