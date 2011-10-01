@@ -9403,6 +9403,24 @@ status => {
 		item_chargestatus => "actdayattack",
 		theme => "worstidea",
 	},
+	item_chaingun => {
+		# 6.666 damage/sec, total 80 to 480 damage
+		roletext => "#TEXT Chaingun (weapon, 30-210 damage, recharge 18s, 6 shots)",
+		actions => ["dayattack;6"],
+		status => {
+			weapon => "gun",
+			weapondamage => 30,
+			weaponkillmessage => "TARGET was shredded by PLAYER's Chaingun!",
+			weaponmaxshots => 7,
+			rechargeattack => 18,
+		},
+		template => 1,
+		template_forbidstatus => "weapon",
+		item => 1,
+		item_name => "Chaingun",
+		item_chargestatus => "actdayattack",
+		theme => "worstidea",
+	},
 	item_avenger => {
 		# 2.500 damage/sec, total 360 + 60 damage
 		roletext => "#TEXT Avenger (weapon, 60 damage, recharge 24s, 6 shots; deals 60 damage to your killer when you die)",
@@ -10775,6 +10793,13 @@ add_gunfight_role(4, "shotgun", "ammopack");
 add_gunfight_role(4, "shotgun", "armor");
 add_gunfight_role(6, "shotgun");
 add_gunfight_role(6, "shotgun", "championsmedal");
+# item_chaingun
+add_gunfight_role(6, "chaingun");
+add_gunfight_role(6, "chaingun", "ammopack");
+add_gunfight_role(6, "chaingun", "scanner");
+add_gunfight_role(8, "chaingun");
+add_gunfight_role(8, "chaingun", "speedbooster");
+add_gunfight_role(8, "chaingun", "supershield");
 # item_avenger
 add_gunfight_role(4, "avenger");
 add_gunfight_role(4, "avenger", "hedgehogshield");
