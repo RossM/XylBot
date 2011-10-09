@@ -177,7 +177,6 @@ our %setup_config = (
 		nonight => 1,
 		deepsouth => 1,
 		start => "day",
-#		randomok => 1,
 		minplayersrandom => 4,
 		help => "screwball (4-12 players): Nightless setup. Role assignment in this setup is roughly equivalent to wacky  multirole.",
 	},
@@ -319,7 +318,6 @@ our %setup_config = (
 			sk => 'theme_cosmic_assassin',
 		},
 		help => "cosmic: A theme setup based on the board game Cosmic Encounter.",
-		randomok => 1,
 		minplayersrandom => 4,
 		fakeok => 1,
 	},
@@ -547,7 +545,6 @@ our %setup_config = (
 		},
 		start => "day",
 		help => "kingmaker (5-12 players): One player is the Kingmaker, one or more are Villains, and the remainder are Peasants, Heroes, Cops, Doctors, or Vigilantes. The Kingmaker selects a King each day, and the King decides who to lynch. There is a more significant number of powerroles than normal kingmaker.",
-		randomok => 1,
 	},
 	dreamers => {
 		minplayers => 4,
@@ -578,7 +575,6 @@ our %setup_config = (
 		numalts12 => 1, roles12_1 => [qw"ass_king ass_guard ass_guard ass_guard ass_guard ass_guard ass_guard ass_guard ass_guard ass_guard ass_assassin/assassin ass_assassin/assassin"],
 		start => "day",
 		help => "assassin (5-12 players): One player is the King, one or more are Assassins, and the remainder are Guards. The Guards know who the King is, but the Assassins don't. The Assassins win if the King dies. There are no night kills, but if an Assassin is lynched they can kill one player before dying.",
-		randomok => 1,
 	},
 	momir => {
 		minplayers => 3,
@@ -599,7 +595,6 @@ our %setup_config = (
 		start => "night",
 		nokillphases => 12,
 		help => "momir (3-15 players): A fixed setup where all players are Mutants, either town or serial killer.",
-		randomok => 1,
 		fakeok => 1,
 	},
 	evomomir => {
@@ -646,6 +641,7 @@ our %setup_config = (
 		numalts20 => 1, start20_1 => "day",   roles20_1 => [qw"t t t t t t t t t t t t t t t t t m/mafia m/mafia m/mafia"],
 		start => "day",
 		help => "mountainous (3-15 players): A fixed setup where only Townies and Mafiosos appear.",
+		randomok => 1,
 		realok => 1,
 	},
 	wtf => {
@@ -883,7 +879,6 @@ our %setup_config = (
 		start => "day",
 		publicroles => [qw"c d trk rb asc suiday t red alien vot2 mayor copy bg2 nw mot v dhalf ss rand xk mup bus dp tik magn giver backup"],
 		smalltown => 1,
-		randomok => 1,
 		realok => 1,
 	},
 	"smalltown+-base" => {
