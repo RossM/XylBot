@@ -2152,25 +2152,59 @@ sub setup {
 			if (((($setup_config{$cur_setup}{"numalts$numplayers"} || 0) == 1 || $setup_config{$cur_setup}{roles}) &&
 				!grep(/,/, @{$setup_config{$cur_setup}{roles} || $setup_config{$cur_setup}{"roles${numplayers}_1"}}) &&
 				!setup_rule('smalltown')) ||
-				setup_rule('open'))
+				setup_rule('open') || setup_rule('semiopen'))
 			{
 				my %role_count;
 
-				foreach my $role (@roles)
+				my @extraclaims = ();
+
+				my $hiderolecount = setup_rule('semiopen') || 0;
+
+				if ($hiderolecount)
+				{
+					my $setup = $cur_setup;
+
+					my $weirdness = setup_rule('weirdness', $setup); 
+					$weirdness = rand(1.0) if setup_rule('randomweirdness', $setup);
+
+					my %power = (town => rand(1.0));
+
+					my $players = @roles;
+
+					@extraclaims = select_roles($setup, { townnormal => int(rand($players / 2)), townpower => int(rand($players / 3)) + 1, townbad => 0, sk => int(rand($players / 6)) + (rand() < 0.2 ? 1 : 0), survivor => int(rand($players / 6)) + (rand() < 0.2 ? 1 : 0), cult => 0, mafia => int(rand($players / 3)) + 1, mafia2 => 0, wolf => 0 }, $weirdness, scalar(@players), 1, \%power);
+
+					if (grep { $_->{role} =~ /^sib/ } @roles)
+					{
+						push @extraclaims, { team => "mafia", role => "sib2" };
+					}
+				}
+
+				foreach my $role (@roles, @extraclaims)
 				{
 					my $team = $role->{team};
 					my $name = role_name($role->{role}, 1);
+					$team =~ s/\d$// if $hiderolecount;
 					$role_count{$team}{$name}++;
 				}
 
 				my %teamroles;
 				foreach my $team (keys %role_count)
 				{
-					$teamroles{$team} = [ map { $role_count{$team}{$_} > 1 ? "$_ (x$role_count{$team}{$_})" : $_ } sort keys %{$role_count{$team}} ];
+					$teamroles{$team} = [ map { 
+						$hiderolecount ? $_ :
+						$role_count{$team}{$_} > 1 ? "$_ (x$role_count{$team}{$_})" : $_ 
+					} sort keys %{$role_count{$team}} ];
 				}
 				my @teamroles = map { "[$_] " . join(', ', @{$teamroles{$_}}) } sort keys %teamroles;
 
-				announce("This is a fixed setup. The roles are: @teamroles");
+				if ($hiderolecount)
+				{
+					announce("This is a semi-open setup. The possible roles are: @teamroles");
+				}
+				else
+				{
+					announce("This is a fixed setup. The roles are: @teamroles");
+				}
 			}
 
 			if (setup_rule('smalltown'))

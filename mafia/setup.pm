@@ -306,6 +306,15 @@ our %setup_config = (
 		help => "neko-open (4+ players): The roles in the setup are announced at the beginning of the game, but individual players' roles are not revealed on death.",
 		realok => 1,
 	},
+	semiopen => {
+		minplayers => 4,
+		randomweirdness => 1,
+		teamweirdness => 0.5,
+		nobastard => 1,
+		"semiopen" => 1,
+		help => "semiopen (4+ players): A list of possible roles in the setup is announced at the beginning of the game.",
+		realok => 1,
+	},
 	cosmic => {
 		minplayers => 4,
 		weirdness => 1,
