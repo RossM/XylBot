@@ -1401,7 +1401,7 @@ sub mafia_command {
 
 		unless ($presetup)
 		{
-			foreach my $team (keys %teams)
+			foreach my $team (sort keys %teams)
 			{
 				my %rolecount;
 				$msg .= '; ' if $msg;
