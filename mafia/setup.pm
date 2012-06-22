@@ -1987,7 +1987,7 @@ sub select_role {
 	my $threshold2 = -0.1;
 	$threshold2 = -0.5 if defined($thresholdmult);
 	$threshold2 = -2.0 if setup_rule('noneutral', $setup);
-	my $exp = ($weirdness > 0.75 ? 3.3 - 3 * $weirdness : 1);
+	my $exp = ($weirdness > 0.75 ? 4 - 4 * $weirdness : 1);
 	$exp = setup_rule('exp', $setup) if setup_rule('exp', $setup);
 	
 	$dopower = (rand() < $power ? 1 : 0) if !defined($dopower);
