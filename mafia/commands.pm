@@ -1342,6 +1342,8 @@ sub mafia_command {
 		}
 
 		my ($startphase, @roles) = select_setup($players, $setup, $istest);
+		my @extra_claims = ();
+		@extra_claims = select_extra_claims($setup, @roles) if setup_rule('semiopen', $setup);
 		
 		construct_fixed_setup('lasttest', $startphase, @roles);
 		$setup_config{lasttest}{hidden} = 1;
@@ -1349,7 +1351,7 @@ sub mafia_command {
 		my $expand_power = setup_rule('expand_power', $setup);
 
 		my %rolename;
-		foreach my $role (@roles)
+		foreach my $role (@roles, @extra_claims)
 		{
 			unless ($presetup)
 			{
@@ -1378,6 +1380,10 @@ sub mafia_command {
 			-((role_power($a->{role}, $players, 0, $expand_power) || 0) <=> (role_power($b->{role}, $players, 0, $expand_power) || 0)) ||
 			$rolename{$a} cmp $rolename{$b}
 		} @roles;
+		@extra_claims = sort {
+			$a->{team} cmp $b->{team} ||
+			$rolename{$a} cmp $rolename{$b}
+		} @extra_claims;
 		my $lastteam = '';
 		my $msg = '';
 		my @msg;
@@ -1386,36 +1392,57 @@ sub mafia_command {
 
 		push @msg, "[$setup] ";
 
+		my %teams;
+
+		foreach my $role (@roles, @extra_claims)
+		{
+			$teams{$role->{team}}++;
+		}
+
 		unless ($presetup)
 		{
-			foreach my $role (@roles)
+			foreach my $team (keys %teams)
 			{
-				my $rolename = $rolename{$role};
-			
-				if ($role->{team} ne $lastteam)
+				my %rolecount;
+				$msg .= '; ' if $msg;
+				$msg .= "$team: ";
+				$lastrolename = "";
+				$numrole = 0;
+				foreach my $role (@roles)
 				{
-					$msg .= " (x$numrole)" if $numrole > 1;
-					$numrole = 0;
-					$lastrolename = $rolename;
-					$lastteam = $role->{team};
-					$msg .= '; ' if $msg;
+					next unless $role->{team} eq $team;
+
+					my $rolename = $rolename{$role};
+					$rolecount{$rolename}++;
+				
+					if ($rolename ne $lastrolename)
+					{
+						$msg .= " (x$numrole)" if $numrole > 1;
+						$msg .= ", " if $numrole;
+						$numrole = 0;
+						$lastrolename = $rolename;
+						push @msg, $msg;
+						$msg = "";
+						$msg .= "$rolename";
+					}
+					$numrole++;
+				}
+				$msg .= " (x$numrole)" if $numrole > 1;
+				foreach my $role (@extra_claims)
+				{
+					next unless $role->{team} eq $team;
+
+					my $rolename = $rolename{$role};
+					next if $rolecount{$rolename};
+					$rolecount{$rolename}++;
+
+					$msg .= ", " if $numrole;
+					$numrole = 1;
 					push @msg, $msg;
 					$msg = "";
-					$msg .= "$role->{team}: $rolename";
+					$msg .= "[$rolename]";
 				}
-				elsif ($rolename ne $lastrolename)
-				{
-					$msg .= " (x$numrole)" if $numrole > 1;
-					$numrole = 0;
-					$lastrolename = $rolename;
-					$msg .= ", ";
-					push @msg, $msg;
-					$msg = "";
-					$msg .= "$rolename";
-				}
-				$numrole++;
 			}
-			$msg .= " (x$numrole)" if $numrole > 1;
 			push @msg, $msg;
 		}
 		else

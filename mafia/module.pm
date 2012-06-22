@@ -2103,6 +2103,27 @@ sub send_setup_to_moderators {
 	}
 }
 
+sub select_extra_claims {
+	my ($setup, @roles) = @_;
+
+	my $weirdness = setup_rule('weirdness', $setup); 
+	$weirdness = rand(1.0) if setup_rule('randomweirdness', $setup);
+
+	my %power = (town => rand(1.0));
+
+	my $players = @roles;
+
+	my @extraclaims = select_roles($setup, { townnormal => int(rand($players / 2)), townpower => int(rand($players / 3)) + 1, townbad => 0, sk => int(rand($players / 6)) + (rand() < 0.2 ? 1 : 0), survivor => int(rand($players / 6)) + (rand() < 0.2 ? 1 : 0), cult => 0, mafia => int(rand($players / 3)) + 1, mafia2 => 0, wolf => 0 }, $weirdness, $players, 1, \%power);
+
+	if (grep { $_->{role} =~ /^sib/ } (@roles, @extraclaims))
+	{
+		push @extraclaims, { team => "town", role => "sib2" };
+		push @extraclaims, { team => "mafia", role => "sib2" };
+	}
+
+	return @extraclaims;
+}
+
 sub setup {
 	my $numplayers = @players;
 	my $minplayers = setup_minplayers($cur_setup);
@@ -2162,22 +2183,7 @@ sub setup {
 
 				if ($hiderolecount)
 				{
-					my $setup = $cur_setup;
-
-					my $weirdness = setup_rule('weirdness', $setup); 
-					$weirdness = rand(1.0) if setup_rule('randomweirdness', $setup);
-
-					my %power = (town => rand(1.0));
-
-					my $players = @roles;
-
-					@extraclaims = select_roles($setup, { townnormal => int(rand($players / 2)), townpower => int(rand($players / 3)) + 1, townbad => 0, sk => int(rand($players / 6)) + (rand() < 0.2 ? 1 : 0), survivor => int(rand($players / 6)) + (rand() < 0.2 ? 1 : 0), cult => 0, mafia => int(rand($players / 3)) + 1, mafia2 => 0, wolf => 0 }, $weirdness, scalar(@players), 1, \%power);
-
-					if (grep { $_->{role} =~ /^sib/ } (@roles, @extraclaims))
-					{
-						push @extraclaims, { team => "town", role => "sib2" };
-						push @extraclaims, { team => "mafia", role => "sib2" };
-					}
+					@extraclaims = select_extra_claims($cur_setup, @roles);
 				}
 
 				foreach my $role (@roles, @extraclaims)
