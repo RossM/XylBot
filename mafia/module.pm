@@ -2173,8 +2173,9 @@ sub setup {
 
 					@extraclaims = select_roles($setup, { townnormal => int(rand($players / 2)), townpower => int(rand($players / 3)) + 1, townbad => 0, sk => int(rand($players / 6)) + (rand() < 0.2 ? 1 : 0), survivor => int(rand($players / 6)) + (rand() < 0.2 ? 1 : 0), cult => 0, mafia => int(rand($players / 3)) + 1, mafia2 => 0, wolf => 0 }, $weirdness, scalar(@players), 1, \%power);
 
-					if (grep { $_->{role} =~ /^sib/ } @roles)
+					if (grep { $_->{role} =~ /^sib/ } (@roles, @extraclaims))
 					{
+						push @extraclaims, { team => "town", role => "sib2" };
 						push @extraclaims, { team => "mafia", role => "sib2" };
 					}
 				}
