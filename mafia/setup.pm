@@ -641,7 +641,7 @@ our %setup_config = (
 		numalts20 => 1, start20_1 => "day",   roles20_1 => [qw"t t t t t t t t t t t t t t t t t m/mafia m/mafia m/mafia"],
 		start => "day",
 		help => "mountainous (3-15 players): A fixed setup where only Townies and Mafiosos appear.",
-		randomok => 1,
+	#		randomok => 1,
 		realok => 1,
 	},
 	wtf => {

@@ -265,7 +265,7 @@ sub cmd_in {
 		notice($fromnick, "Sorry, you cannot join a game with that nick. Please change your nick and try again.");
 		return 1;
 	}
-	elsif (length($fromnick) > 17)
+	elsif (length($fromnick) > 22)
 	{
 		notice($fromnick, "Sorry, you cannot join a game because your nick is too long. Please change your nick and try again.");
 		return 1;
@@ -775,12 +775,12 @@ sub mafia_command {
 		}
 		else
 		{
-			announce $to, "Setups available: @somesetups";
+			notice $fromnick, "Setups available: @somesetups";
 		}
 		while (@setups)
 		{
 			@somesetups = @setups > $maxsetups ? splice @setups, 0, $maxsetups : splice @setups, 0, $#setups+1;
-			announce "@somesetups";
+			notice $fromnick,  "@somesetups";
 		}
 	}
 	elsif ($subcommand eq 'help')
@@ -865,6 +865,7 @@ sub mafia_command {
 			my $who = get_player($player);
 			my $playermask = $player_masks{$player};
 			remove_player($who, $playermask);
+			announce($to, "$who\'s signup has been removed");
 			::bot_log("FORCE OUT $who from $fromnick");
 		}
 		update_voiced_players();
@@ -1269,11 +1270,11 @@ sub mafia_command {
 	}
 	elsif ($subcommand eq 'showcommands' && $forum eq 'public')
 	{
-		announce($to, "Mafia commands: " . join(' ', sort qw[start go wait in out votes alive special help reset stop status showcommands testsetup coin top10 record leaders checkmod unmute players messages]));
+		notice $fromnick,  "Mafia commands: " . join(' ', sort qw[start go wait in out votes alive special help reset stop status showcommands testsetup coin top10 record leaders checkmod unmute players messages]);
 	}
 	elsif ($subcommand eq 'showmodcommands' && $forum eq 'public')
 	{
-		announce($to, "Moderator commands: " . join(' ', sort qw[settest starttest forcein forceout forcevote forceaction forcechoose forcehelp force forcenextphase forcerole modkill replace reset stop debugcheckstatus rolescript showsetup showsummary usepresetup showpresetup baserole addability removeability addstatus removestatus setbuddy setdesc begin rules]));
+		notice $fromnick,  "Moderator commands: " . join(' ', sort qw[settest starttest forcein forceout forcevote forceaction forcechoose forcehelp force forcenextphase forcerole modkill replace reset stop debugcheckstatus rolescript showsetup showsummary usepresetup showpresetup baserole addability removeability addstatus removestatus setbuddy setdesc begin rules]);
 	}
 	elsif ($subcommand eq 'rules')
 	{	
@@ -2590,7 +2591,7 @@ HELP
 	::add_help "$mafia_cmd votes", "$mafia_cmd votes: Displays the current vote count. This command has a cooldown.";
 	::add_help "$mafia_cmd alive", "$mafia_cmd alive: Displays the players who are currently alive.";
 	::add_help "$mafia_cmd status", "$mafia_cmd status: Displays the current day and phase, and how many players are alive.";
-	::add_help "$mafia_cmd special", "$mafia_cmd special: Displays the special setups available.";
+	::add_help "$mafia_cmd special", "$mafia_cmd special: Displays a list of most setups.";
 	::add_help "$mafia_cmd help", "$mafia_cmd help [command]: Gets help on a command, action, role, or setup.";
 	::add_help "$mafia_cmd reset", "$mafia_cmd reset: Votes to reset the bot. If enough people vote for a reset, the game will be stopped and the bot reset. This command should only be used if the bot is experiencing bugginess/lag.";
 	::add_help "$mafia_cmd stop", "$mafia_cmd stop: Votes to stop the game. If enough people vote to stop, the game will be stopped with no winner.";

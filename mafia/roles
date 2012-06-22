@@ -9949,10 +9949,10 @@ status => {
 
 	# Special roles - These are for moderated/multirole games
 	# Mostly they just replace templated things with roles with funny names
-	suic => {
+	suicider => {
 		name => "Suicider",
-		roletext => "You will commit suicide night 1. There is nothing you can do to stop it.",
-		actions => ["autosuicide"],
+		roletext => "You will commit suicide the first night. There is nothing you can do to stop it.",
+		onnight0 => "action:suicide",
 		showhelp => 1,
 	},
 	hider => {
