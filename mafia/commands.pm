@@ -16,6 +16,7 @@ our (@action_queue, @resolved_actions, @deepsouth_actions);
 our ($phases_without_kill);
 our ($day, $phase);
 our ($last_votecount_time);
+our ($last_massclaim_time);
 our (@timed_action_timers);
 our (@recharge_timers);
 our ($signuptimer, $signupwarningtimer);
@@ -210,6 +211,7 @@ sub cmd_go {
 	else
 	{
 		if ($end_signups_time >= time + 30) {
+			unschedule(\$signupwarningtimer); #Daz, 07/08/12
 			end_signups_warning();
 			schedule(\$signuptimer, 30, \&end_signups);
 			$end_signups_time = time + 30;
@@ -724,6 +726,29 @@ sub mafia_command {
 	elsif ($subcommand eq 'players' && $game_active && $to eq $mafiachannel && $forum eq 'public') 	# Daz
 	{
 		show_playersin();
+	}
+	elsif ($subcommand eq 'massclaim' && $to eq $mafiachannel && $forum eq 'public') #Daz, 07/08/12
+	{
+		if ($phase eq 'day' && time >= $last_massclaim_time + 15)
+		{
+			$last_massclaim_time = time;
+#			my ($mass1);
+			announce time;
+			announce $last_massclaim_time;
+			announce "Massclaim starting. Claim your rolename & any releveant actions/events/choices on 0.";
+			schedule($signupwarningtimer, time + 500, announce "Hi");
+#			schedule($mass2,time + 6, announce "4");
+#			schedule($mass3,time + 7, announce "3");
+#			schedule($mass4, time + 8, announce "2");
+#			schedule($mass5, time + 9, announce "1");
+#			schedule($mass6, time + 10, announce "0 - claim now");
+		}
+		else
+		{	
+			notice $fromnick, "That command can only be used once every 15 seconds, during day phases of ongoing games.";
+			return 1;
+		}
+		
 	}
 	elsif ($subcommand eq 'status')
 	{
@@ -2746,19 +2771,19 @@ to win. Certain roles have minimum player limits (doctor can only appear with 4 
 not to claim a role that cannot occur. To find a role that you can fakeclaim, see "/msg $::nick help testsetup'.
 GAMEPLAY
 	::add_help "rules", <<RULES;
-Failing to follow these rules may result in being modkilled or banned.
+Failing to follow these rules may result in being removed from games and/or banned.
 Operators may also use their discretion in managing the channel for areas not covered by these rules.
 If you have any questions, concerns or suggestions, PM an Operator (@).  
 
-1. You may only communicate privately with a player if it is night and they are part of the same scum/mason group as you.
-2. You may not quote any messages you receive from the bot privately. You may paraphrase if you want.
+1. You may only communicate privately with a player if it is nighttime and they are part of the same scum/mason group as you.
+2. Private messages from the bot, including but not limited to your role PM, actions sent and results received, should not be pasted. Paraphrasing may be used instead.
 3. You may not impersonate a user unless you are replacing them into the current game.
 4. You must attempt to fulfill your win condition in all games. You may not intentionally delay a certain win. 
-5. You may not bring outside information or vendettas into the current game. This does not include meta-plays or bot knowledge.
+5. You may not bring outside information or vendettas into the current game.
 6. Do not join games you cannot complete. If you need to leave, say so and '/nick YourNewNick' before you go.
-7. Server and bot abuse will be dealt with appropriately. You may also not use fakevotes that contain non-standard characters. 
-8. Do not spam the channel or use excessive caps. Multiple bot commands should be done in PM. Large pastes should use pastebin.
-9. Do not discriminate based on sexuality, gender, or race. Excessive abuse will also not be tolerated. 
+7. Abuse of bot and server mechanics is against the spirit of the game and as such should not be used. Users should also seek not to use non-standard characters during a game.
+8. Do not spam the channel or use excessive caps. Multiple bot commands should be done in PM. 
+9. Discrimination (including but not limited to race, sexuality, gender, religion) and excessive abuse is forbidden.  
 RULES
 	
 	foreach my $action (keys %action_config)
